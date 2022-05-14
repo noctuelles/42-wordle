@@ -25,25 +25,26 @@ win           = 0
 
 title = """
 \t\t\t ____   ____   ____   ____   ____   ____ 
-\t\t\t||\x1b[92mW\x1b[0m || ||\x1b[93mo\x1b[0m || ||\x1b[93mr\x1b[0m || ||\x1b[90md\x1b[0m || ||\x1b[90ml\x1b[0m || ||\x1b[92me\x1b[0m ||
+\t\t\t||\x1b[92mW\x1b[0m || ||\x1b[93mO\x1b[0m || ||\x1b[93mR\x1b[0m || ||\x1b[90mD\x1b[0m || ||\x1b[90mL\x1b[0m || ||\x1b[92mE\x1b[0m ||
 \t\t\t||__|| ||__|| ||__|| ||__|| ||__|| ||__||
 \t\t\t|/__\| |/__\| |/__\| |/__\| |/__\| |/__\|
+
 """
 
 keyboard = """
 \t___________________________________________________________________________________
 \t|  ____    ____    ____    ____    ____    ____    ____    ____    ____    ____   |
-\t| ||q ||  ||w ||  ||e ||  ||r ||  ||t ||  ||y ||  ||u ||  ||i ||  ||o ||  ||p ||  |
+\t| ||Q ||  ||W ||  ||E ||  ||R ||  ||T ||  ||Y ||  ||U ||  ||I ||  ||O ||  ||P ||  |
 \t| ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  |
 \t| |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |
 \t|                                                                                 |
 \t|        ____   ____   ____   ____   ____   ____   ____   ____   ____             |
-\t|       ||a || ||s || ||d || ||f || ||g || ||h || ||j || ||k || ||l ||            |
+\t|       ||A || ||S || ||D || ||F || ||G || ||H || ||J || ||K || ||L ||            |
 \t|       ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||__||            |
 \t|       |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/__\|            |
 \t|                                                                                 |
 \t|  __________    ____   ____   ____   ____   ____   ____   ____   _____________   |
-\t| || Delete ||  ||z || ||x || ||c || ||v || ||b || ||n || ||m || ||   Enter   ||  |
+\t| || DELETE ||  ||Z || ||X || ||C || ||V || ||B || ||N || ||M || ||   ENTER   ||  |
 \t| ||________||  ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||___________||  |
 \t| |/________\|  |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/___________\|  |
 \t|                                                                                 |
@@ -86,14 +87,18 @@ def read_dict(filename):
 def print_board(output_buffer):
 	line_printed = 0
 
+	print('\t\t\t\t' + '*' * 23)
+	print('\t\t\t\t*' + ' ' * 21 + '*')
 	for i in output_buffer:
-		print (f'\t\t\t\t\t{i}')
+		print (f'\t\t\t\t*  {i}  *')
 		line_printed += 1
 	
 	i = line_printed
 	while i < 6:
-		print('\t\t\t\t\t_  _  _  _  _')
+		print('\t\t\t\t*  _   _   _   _   _  *')
 		i += 1
+	print('\t\t\t\t*' + ' ' * 21 + '*')
+	print('\t\t\t\t' + '*' * 23)
 	print('\n')
 
 def is_the_word_to_guess(input_idc):
@@ -107,20 +112,22 @@ def convert_to_output_str(input_idc, user_input):
 
 	for i,value in enumerate(input_idc):
 		if value == 2:
-			output = "".join([output, '\x1b[92m', user_input[i].upper(), '\x1b[0m', '  '])
+			output = "".join([output, '\x1b[92m', user_input[i].upper(), '\x1b[0m', '   '])
 		elif value == 1:
-			output = "".join([output, '\x1b[93m', user_input[i].upper(), '\x1b[0m', '  '])
+			output = "".join([output, '\x1b[93m', user_input[i].upper(), '\x1b[0m', '   '])
 		elif value == 0:
-			output = "".join([output, '\x1b[90m', user_input[i].upper(), '\x1b[0m', '  '])
-	return output
+			output = "".join([output, '\x1b[90m', user_input[i].upper(), '\x1b[0m', '   '])
+	return output.strip()
 
 def color_keyboard(input_idc, user_input):
 	global keyboard
 
+	user_input = user_input.upper()
 	for i,value in enumerate(input_idc):
 		if value == 2:
 			keyboard = keyboard.replace(f'|{user_input[i]} |', f'|\x1b[92m{user_input[i]}\x1b[0m |')
 			keyboard = keyboard.replace(f'|\x1b[93m{user_input[i]}\x1b[0m |', f'|\x1b[92m{user_input[i]}\x1b[0m |')
+			keyboard = keyboard.replace(f'|\x1b[90m{user_input[i]}\x1b[0m |', f'|\x1b[92m{user_input[i]}\x1b[0m |')
 		elif value == 1:
 			keyboard = keyboard.replace(f'|{user_input[i]} |', f'|\x1b[93m{user_input[i]}\x1b[0m |')
 		elif value == 0:
@@ -177,10 +184,10 @@ def game_loop(word_to_guess):
 			print('Congratulation, you won !')
 			break
 		elif game_turns == 6:
-			print('You loose ! The word was : {word_to_guess}')
+			print(f'You loose ! The word was : \'{word_to_guess}\'.')
 			break
 		try:
-			user_input = input('Your word: ')
+			user_input = input('Your word: ').strip().lower()
 		except KeyboardInterrupt:
 			print('\nGoodbye !')
 			sys.exit(1)
@@ -189,7 +196,6 @@ def game_loop(word_to_guess):
 		if len(user_input) != 5:
 			error_msg = f'\x1b[31merror:\x1b[0m \'{user_input}\': must contains 5 letters.'
 			continue
-		user_input = user_input.lower()
 		if user_input in word_list:
 			output_buffer.append(check_word(word_to_guess, user_input))
 			game_turns += 1
@@ -198,14 +204,13 @@ def game_loop(word_to_guess):
 			continue
 
 def main():
-	os.system('clear')
-	print(f'{title}\n\n')
 	if len(sys.argv) != 2:
 		print(f'usage: {sys.argv[0]} <path_to_dictionary>')
 		sys.exit(1)
 	else:
 		word_to_guess = read_dict(sys.argv[1])
-	# word_to_guess = 'maron'
+	os.system('clear')
+	print(f'{title}\n\n')
 	print(f'ans: {word_to_guess}')
 	game_loop(word_to_guess)
 
