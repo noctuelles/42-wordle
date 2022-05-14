@@ -32,11 +32,12 @@ def read_dict(filename):
 	for index, line in enumerate(f):
 		line = line.strip()
 		if line:
-			if not line.isalpha(): #or len(line) != 5:
+			if not line.isalpha() or len(line) != 5:
 				print(f'error: line {index}: not a valid word.')
 				sys.exit(1)
 			else:
 				if line not in word_list:
+					line = line.lower()
 					word_list.append(line)
 				else:
 					print('error: dictionary contains duplicate.')
@@ -56,12 +57,12 @@ def print_board(output_buffer):
 	line_printed = 0
 
 	for i in output_buffer:
-		print (f'{i}')
+		print (f'\t{i}')
 		line_printed += 1
 	
 	i = line_printed
 	while i < 6:
-		print('_  _  _  _  _')
+		print('\t_  _  _  _  _')
 		i += 1
 	print('\n')
 
@@ -122,10 +123,11 @@ def game_loop(word_to_guess):
 	
 	while 1:
 		user_input = input ("input: ")
-		print('\n')
+		print('')
 		if len(user_input) != 5:
-			print('error: the word must contains 5 letters.')
+			print('error: the word must contains 5 letters.\n')
 			continue
+		user_input = user_input.lower()
 		if user_input in word_list:
 			output_buffer.append(check_word(word_to_guess, user_input))
 			print_board(output_buffer)
@@ -137,7 +139,7 @@ def game_loop(word_to_guess):
 				print('You loose !')
 				break
 		else:
-			print(f'error: input \'{user_input}\' is not a valid word.')
+			print(f'error: input \'{user_input}\' is not a valid word.\n')
 			continue
 
 def main():
@@ -146,8 +148,7 @@ def main():
 		sys.exit(1)
 	else:
 		word_to_guess = read_dict(sys.argv[1])
-
-	word_to_guess = 'maple'
+	word_to_guess = 'maron'
 	print(f'ans: {word_to_guess}')
 	game_loop(word_to_guess)
 
