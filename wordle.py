@@ -13,6 +13,7 @@
 # **************************************************************************** #
 
 import sys
+import os
 import random
 import array
 
@@ -22,10 +23,10 @@ output_buffer = []
 win           = 0
 
 title = """
-\t\t ____   ____   ____   ____   ____   ____ 
-\t\t||\x1b[92mW\x1b[0m || ||\x1b[93mo\x1b[0m || ||\x1b[93mr\x1b[0m || ||\x1b[90md\x1b[0m || ||\x1b[90ml\x1b[0m || ||\x1b[92me\x1b[0m ||
-\t\t||__|| ||__|| ||__|| ||__|| ||__|| ||__||
-\t\t|/__\| |/__\| |/__\| |/__\| |/__\| |/__\|
+\t\t\t ____   ____   ____   ____   ____   ____ 
+\t\t\t||\x1b[92mW\x1b[0m || ||\x1b[93mo\x1b[0m || ||\x1b[93mr\x1b[0m || ||\x1b[90md\x1b[0m || ||\x1b[90ml\x1b[0m || ||\x1b[92me\x1b[0m ||
+\t\t\t||__|| ||__|| ||__|| ||__|| ||__|| ||__||
+\t\t\t|/__\| |/__\| |/__\| |/__\| |/__\| |/__\|
 """
 
 keyboard = """
@@ -78,18 +79,19 @@ def read_dict(filename):
 
 	random_index = random.randint(0, nbr_line)
 	word_to_guess = word_list[random_index]
+	print(f'Total words available :{nbr_line + 1}\n')
 	return word_to_guess
 
 def print_board(output_buffer):
 	line_printed = 0
 
 	for i in output_buffer:
-		print (f'\t{i}')
+		print (f'\t\t\t\t\t{i}')
 		line_printed += 1
 	
 	i = line_printed
 	while i < 6:
-		print('\t_  _  _  _  _')
+		print('\t\t\t\t\t_  _  _  _  _')
 		i += 1
 	print('\n')
 
@@ -111,6 +113,18 @@ def convert_to_output_str(input_idc, user_input):
 			output = "".join([output, '\x1b[90m', user_input[i].upper(), '\x1b[0m', '  '])
 	return output
 
+def color_keyboard(input_idc, user_input):
+	global keyboard
+
+	for i,value in enumerate(input_idc):
+		if value == 2:
+			keyboard = keyboard.replace(f'|{user_input[i]} |', f'|\x1b[92m{user_input[i]}\x1b[0m |')
+			keyboard = keyboard.replace(f'|\x1b[93m{user_input[i]}\x1b[0m |', f'|\x1b[92m{user_input[i]}\x1b[0m |')
+		elif value == 1:
+			keyboard = keyboard.replace(f'|{user_input[i]} |', f'|\x1b[93m{user_input[i]}\x1b[0m |')
+		elif value == 0:
+			keyboard = keyboard.replace(f'|{user_input[i]} |', f'|\x1b[90m{user_input[i]}\x1b[0m |')
+	
 def check_word(word_to_guess, user_input):
 	global win
 	output = ""
@@ -123,6 +137,7 @@ def check_word(word_to_guess, user_input):
 			input_idc[i] = 1
 	if is_the_word_to_guess(input_idc) == True:
 		win = 1
+		color_keyboard (input_idc, user_input)
 		return convert_to_output_str(input_idc, user_input)
 	for i,value in enumerate(input_idc):
 			if value == 1:
@@ -142,7 +157,7 @@ def check_word(word_to_guess, user_input):
 					k += 1
 				if occurence_nbr <= 0:
 					input_idc[i] = 0
-	
+	color_keyboard (input_idc, user_input)
 	return convert_to_output_str(input_idc, user_input)
 
 def game_loop(word_to_guess):
@@ -156,6 +171,8 @@ def game_loop(word_to_guess):
 			continue
 		user_input = user_input.lower()
 		if user_input in word_list:
+			os.system('clear')
+			print(title)
 			output_buffer.append(check_word(word_to_guess, user_input))
 			print_board(output_buffer)
 			print(keyboard)
@@ -171,15 +188,17 @@ def game_loop(word_to_guess):
 			continue
 
 def main():
-	print(title)
+	os.system('clear')
+	print(f'{title}\n\n')
 	if len(sys.argv) != 2:
 		print(f'usage: {sys.argv[0]} <path_to_dictionary>')
 		sys.exit(1)
 	else:
 		word_to_guess = read_dict(sys.argv[1])
-	word_to_guess = 'maron'
+	# word_to_guess = 'maron'
 	print(f'ans: {word_to_guess}')
-	
+	print_board(output_buffer)
+	print(keyboard)
 	game_loop(word_to_guess)
 
 if __name__ == "__main__":
