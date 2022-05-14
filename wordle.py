@@ -5,7 +5,7 @@
 #                                                         :::      ::::::::    #
 #    read.py                                            :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ykuo <marvin@42.fr>                        +#+  +:+       +#+         #
+#    By: ykuo and plouvel                           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/13 21:33:15 by ykuo              #+#    #+#              #
 #    Updated: 2022/05/13 23:13:03 by ykuo             ###   ########.fr        #
@@ -209,9 +209,6 @@ def main():
 		sys.exit(1)
 	else:
 		word_to_guess = read_dict(sys.argv[1])
-	os.system('clear')
-	print(f'{title}\n\n')
-	print(f'ans: {word_to_guess}')
 	game_loop(word_to_guess)
 
 if __name__ == "__main__":
