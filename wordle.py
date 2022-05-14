@@ -17,39 +17,14 @@ import os
 import random
 import signal
 import array
+import datetime
+from display import *
 
 # global variable
 word_list     = []
 output_buffer = []
 win           = 0
-
-title = """
-\t\t\t ____   ____   ____   ____   ____   ____ 
-\t\t\t||\x1b[92mW\x1b[0m || ||\x1b[93mO\x1b[0m || ||\x1b[93mR\x1b[0m || ||\x1b[90mD\x1b[0m || ||\x1b[90mL\x1b[0m || ||\x1b[92mE\x1b[0m ||
-\t\t\t||__|| ||__|| ||__|| ||__|| ||__|| ||__||
-\t\t\t|/__\| |/__\| |/__\| |/__\| |/__\| |/__\|
-
-"""
-
-keyboard = """
-\t___________________________________________________________________________________
-\t|  ____    ____    ____    ____    ____    ____    ____    ____    ____    ____   |
-\t| ||Q ||  ||W ||  ||E ||  ||R ||  ||T ||  ||Y ||  ||U ||  ||I ||  ||O ||  ||P ||  |
-\t| ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  |
-\t| |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |
-\t|                                                                                 |
-\t|        ____   ____   ____   ____   ____   ____   ____   ____   ____             |
-\t|       ||A || ||S || ||D || ||F || ||G || ||H || ||J || ||K || ||L ||            |
-\t|       ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||__||            |
-\t|       |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/__\|            |
-\t|                                                                                 |
-\t|  __________    ____   ____   ____   ____   ____   ____   ____   _____________   |
-\t| || DELETE ||  ||Z || ||X || ||C || ||V || ||B || ||N || ||M || ||   ENTER   ||  |
-\t| ||________||  ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||___________||  |
-\t| |/________\|  |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/___________\|  |
-\t|                                                                                 |
-\t|_________________________________________________________________________________|
-"""
+keyboard      = std_keyboard
 
 def read_dict(filename):
 	try:
@@ -79,9 +54,27 @@ def read_dict(filename):
 		print("\x1b[31merror:\x1b[0m  dictionary is empty.")
 		sys.exit(1)
 
+def generate_new_word(word_list):
+	os.system('clear')
+	mode= True
+	try:
+		user_input = input('Do you want to play in ulmite mode? (y/n): ').strip().lower()
+		if (user_input == 'y'):
+			mode = False
+	except KeyboardInterrupt:
+		print('\nGoodbye !')
+		sys.exit(1)
+	except EOFError as err:
+		print('\nGoodbye !')
+		sys.exit(1)
+	nbr_line = len(word_list)
 	random_index = random.randint(0, nbr_line)
+	if mode is True:
+		random_index = datetime.date.today().year
+		random_index += datetime.date.today().month
+		random_index += datetime.date.today().day
+		random_index %= nbr_line
 	word_to_guess = word_list[random_index]
-	print(f'Total words available :{nbr_line + 1}\n')
 	return word_to_guess
 
 def print_board(output_buffer):
@@ -168,9 +161,10 @@ def check_word(word_to_guess, user_input):
 	color_keyboard (input_idc, user_input)
 	return convert_to_output_str(input_idc, user_input)
 
-def game_loop(word_to_guess):
+def game_loop():
 	game_turns = 0
 	error_msg = ""
+	word_to_guess = generate_new_word(word_list)
 
 	while True:
 		os.system('clear')
@@ -202,15 +196,35 @@ def game_loop(word_to_guess):
 		else:
 			error_msg = f'\x1b[31merror:\x1b[0m  \'{user_input}\' is not a valid word.'
 			continue
+	retry()
+
+def retry():
+	global output_buffer
+	global keyboard
+	global win
+	
+	try:
+		user_input = input('Do you want to retry (y/n): ').strip().lower()
+		if (user_input == 'y'):
+			output_buffer = []
+			keyboard = std_keyboard
+			win = 0
+			game_loop()
+		else:
+			print('\nGoodbye !')
+	except KeyboardInterrupt or EOFError as err:
+		print('\nGoodbye !')
+		sys.exit(1)
 
 def main():
+	global keyboard
 	if len(sys.argv) != 2:
 		print(f'\x1b[31musage:\x1b[0m: {sys.argv[0]} <path_to_dictionary>')
 		sys.exit(1)
 	else:
 		print('Loading your dictionnary...')
 		word_to_guess = read_dict(sys.argv[1])
-	game_loop(word_to_guess)
+	game_loop()
 
 if __name__ == "__main__":
     main()
