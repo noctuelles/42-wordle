@@ -21,6 +21,33 @@ word_list     = []
 output_buffer = []
 win           = 0
 
+title = """
+\t\t ____   ____   ____   ____   ____   ____ 
+\t\t||\x1b[92mW\x1b[0m || ||\x1b[93mo\x1b[0m || ||\x1b[93mr\x1b[0m || ||\x1b[90md\x1b[0m || ||\x1b[90ml\x1b[0m || ||\x1b[92me\x1b[0m ||
+\t\t||__|| ||__|| ||__|| ||__|| ||__|| ||__||
+\t\t|/__\| |/__\| |/__\| |/__\| |/__\| |/__\|
+"""
+
+keyboard = """
+\t___________________________________________________________________________________
+\t|  ____    ____    ____    ____    ____    ____    ____    ____    ____    ____   |
+\t| ||q ||  ||w ||  ||e ||  ||r ||  ||t ||  ||y ||  ||u ||  ||i ||  ||o ||  ||p ||  |
+\t| ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  ||__||  |
+\t| |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |/__\|  |
+\t|                                                                                 |
+\t|        ____   ____   ____   ____   ____   ____   ____   ____   ____             |
+\t|       ||a || ||s || ||d || ||f || ||g || ||h || ||j || ||k || ||l ||            |
+\t|       ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||__||            |
+\t|       |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/__\|            |
+\t|                                                                                 |
+\t|  __________    ____   ____   ____   ____   ____   ____   ____   _____________   |
+\t| || Delete ||  ||z || ||x || ||c || ||v || ||b || ||n || ||m || ||   Enter   ||  |
+\t| ||________||  ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||__|| ||___________||  |
+\t| |/________\|  |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/__\| |/___________\|  |
+\t|                                                                                 |
+\t|_________________________________________________________________________________|
+"""
+
 def read_dict(filename):
 	try:
 		f = open(filename, "r")
@@ -131,6 +158,7 @@ def game_loop(word_to_guess):
 		if user_input in word_list:
 			output_buffer.append(check_word(word_to_guess, user_input))
 			print_board(output_buffer)
+			print(keyboard)
 			game_turns += 1
 			if win == 1:
 				print('Congratulation, you won !')
@@ -143,6 +171,7 @@ def game_loop(word_to_guess):
 			continue
 
 def main():
+	print(title)
 	if len(sys.argv) != 2:
 		print(f'usage: {sys.argv[0]} <path_to_dictionary>')
 		sys.exit(1)
@@ -150,6 +179,7 @@ def main():
 		word_to_guess = read_dict(sys.argv[1])
 	word_to_guess = 'maron'
 	print(f'ans: {word_to_guess}')
+	
 	game_loop(word_to_guess)
 
 if __name__ == "__main__":
