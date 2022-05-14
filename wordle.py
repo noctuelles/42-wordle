@@ -15,6 +15,7 @@
 import sys
 import os
 import random
+import signal
 import array
 
 # global variable
@@ -164,18 +165,24 @@ def game_loop(word_to_guess):
 	game_turns = 0
 	
 	while 1:
-		user_input = input ("input: ")
+		os.system('clear')
+		print(title)
+		print_board(output_buffer)
+		print(keyboard)
+		try:
+			user_input = input('Your word: ')
+		except KeyboardInterrupt:
+			print('\nGoodbye !')
+			sys.exit(1)
+		except EOFError as err:
+			continue
 		print('')
 		if len(user_input) != 5:
 			print('error: the word must contains 5 letters.\n')
 			continue
 		user_input = user_input.lower()
 		if user_input in word_list:
-			os.system('clear')
-			print(title)
 			output_buffer.append(check_word(word_to_guess, user_input))
-			print_board(output_buffer)
-			print(keyboard)
 			game_turns += 1
 			if win == 1:
 				print('Congratulation, you won !')
@@ -197,8 +204,6 @@ def main():
 		word_to_guess = read_dict(sys.argv[1])
 	# word_to_guess = 'maron'
 	print(f'ans: {word_to_guess}')
-	print_board(output_buffer)
-	print(keyboard)
 	game_loop(word_to_guess)
 
 if __name__ == "__main__":
