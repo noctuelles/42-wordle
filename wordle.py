@@ -54,7 +54,7 @@ def read_dict(filename):
 	try:
 		f = open(filename, "r")
 	except IOError as e:
-		print("fatal: cannot open file: " + e.strerror)
+		print("\x1b[31mfatal:\x1b[0m  cannot open file: " + e.strerror)
 		sys.exit(1)
 
 	nbr_line      = 0
@@ -62,20 +62,20 @@ def read_dict(filename):
 		line = line.strip()
 		if line:
 			if not line.isalpha() or len(line) != 5:
-				print(f'error: line {index}: not a valid word.')
+				print(f'\x1b[31merror:\x1b[0m  line {index}: not a valid word.')
 				sys.exit(1)
 			else:
 				if line not in word_list:
 					line = line.lower()
 					word_list.append(line)
 				else:
-					print('error: dictionary contains duplicate.')
+					print('\x1b[31merror:\x1b[0m  dictionary contains duplicate.')
 					sys.exit(1)
 		nbr_line = index
 	f.close()
 
 	if not word_list:
-		print("error: dictionary is empty.")
+		print("\x1b[31merror:\x1b[0m  dictionary is empty.")
 		sys.exit(1)
 
 	random_index = random.randint(0, nbr_line)
@@ -163,12 +163,22 @@ def check_word(word_to_guess, user_input):
 
 def game_loop(word_to_guess):
 	game_turns = 0
-	
-	while 1:
+	error_msg = ""
+
+	while True:
 		os.system('clear')
 		print(title)
 		print_board(output_buffer)
+		if error_msg:
+			print(error_msg)
+			error_msg = ""
 		print(keyboard)
+		if win == 1:
+			print('Congratulation, you won !')
+			break
+		elif game_turns == 6:
+			print('You loose ! The word was : {word_to_guess}')
+			break
 		try:
 			user_input = input('Your word: ')
 		except KeyboardInterrupt:
@@ -176,22 +186,15 @@ def game_loop(word_to_guess):
 			sys.exit(1)
 		except EOFError as err:
 			continue
-		print('')
 		if len(user_input) != 5:
-			print('error: the word must contains 5 letters.\n')
+			error_msg = f'\x1b[31merror:\x1b[0m \'{user_input}\': must contains 5 letters.'
 			continue
 		user_input = user_input.lower()
 		if user_input in word_list:
 			output_buffer.append(check_word(word_to_guess, user_input))
 			game_turns += 1
-			if win == 1:
-				print('Congratulation, you won !')
-				break
-			elif game_turns == 6:
-				print('You loose !')
-				break
 		else:
-			print(f'error: input \'{user_input}\' is not a valid word.\n')
+			error_msg = f'\x1b[31merror:\x1b[0m  \'{user_input}\' is not a valid word.'
 			continue
 
 def main():
