@@ -63,14 +63,14 @@ def read_dict(filename):
 		line = line.strip()
 		if line:
 			if not line.isalpha() or len(line) != 5:
-				print(f'\x1b[31merror:\x1b[0m  line {index}: not a valid word.')
+				print(f'\x1b[31merror:\x1b[0m line {index}: not a valid word.')
 				sys.exit(1)
 			else:
 				if line not in word_list:
 					line = line.lower()
 					word_list.append(line)
 				else:
-					print('\x1b[31merror:\x1b[0m  dictionary contains duplicate.')
+					print('\x1b[31merror:\x1b[0m dictionary contains duplicate.')
 					sys.exit(1)
 		nbr_line = index
 	f.close()
@@ -205,9 +205,10 @@ def game_loop(word_to_guess):
 
 def main():
 	if len(sys.argv) != 2:
-		print(f'usage: {sys.argv[0]} <path_to_dictionary>')
+		print(f'\x1b[31musage:\x1b[0m: {sys.argv[0]} <path_to_dictionary>')
 		sys.exit(1)
 	else:
+		print('Loading your dictionnary...')
 		word_to_guess = read_dict(sys.argv[1])
 	game_loop(word_to_guess)
 
