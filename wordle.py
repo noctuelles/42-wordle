@@ -78,7 +78,6 @@ def generate_new_word(word_list):
 		else:
 			random_index = 0
 	word_to_guess = word_list[random_index]
-	word_to_guess = "video"
 	return word_to_guess
 
 def print_board(output_buffer):
