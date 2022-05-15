@@ -194,16 +194,16 @@ def game_loop():
 		else:
 			error_msg = f'\x1b[31merror:\x1b[0m  \'{user_input}\' is not a valid word.'
 			continue
-	game_over(word_to_guess, game_turns)
+	game_over(word_to_guess)
 
-def game_over(word_to_guess, game_turns):
+def game_over(word_to_guess):
 	global output_buffer
 	global keyboard
 	global win
 	
 	if win == 1:
 		print('Congratulation, you won !\n')
-	elif game_turns == 6:
+	else:
 		print(f'You loose ! The word was : \'{word_to_guess}\'.\n')
 	try:
 		user_input = input('Do you want to play again (y/n): ').strip().lower()
