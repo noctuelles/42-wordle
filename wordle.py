@@ -73,8 +73,12 @@ def generate_new_word(word_list):
 		random_index = datetime.date.today().year
 		random_index += datetime.date.today().month
 		random_index += datetime.date.today().day
-		random_index %= nbr_line
+		if (nbr_line != 0):
+			random_index %= nbr_line
+		else:
+			random_index = 0
 	word_to_guess = word_list[random_index]
+	word_to_guess = "video"
 	return word_to_guess
 
 def print_board(output_buffer):
@@ -141,23 +145,23 @@ def check_word(word_to_guess, user_input):
 		color_keyboard (input_idc, user_input)
 		return convert_to_output_str(input_idc, user_input)
 	for i,value in enumerate(input_idc):
-			if value == 1:
+		if value == 1:
 
-				occurence_nbr = word_to_guess.count(user_input[i])
-				for k,value in enumerate(word_to_guess):
-					if value == user_input[i] and input_idc[k] == 2:
-						occurence_nbr -= 1 
-				if occurence_nbr <= 0:
-					input_idc[i] = 0
+			occurence_nbr = word_to_guess.count(user_input[i])
+			for k,value in enumerate(word_to_guess):
+				if value == user_input[i] and input_idc[k] == 2:
+					occurence_nbr -= 1
+			if occurence_nbr <= 0:
+				input_idc[i] = 0
 
-				occurence_nbr = word_to_guess.count(user_input[i])
-				k = 0
-				while k != i:
-					if user_input[i] == user_input[k] and input_idc[k] == 1:
-						occurence_nbr -= 1
-					k += 1
-				if occurence_nbr <= 0:
-					input_idc[i] = 0
+			occurence_nbr = word_to_guess.count(user_input[i])
+			k = 0
+			while k != i:
+				if user_input[i] == user_input[k] and input_idc[k] == 1:
+					occurence_nbr -= 1
+				k += 1
+			if occurence_nbr <= 0:
+				input_idc[i] = 0
 	color_keyboard (input_idc, user_input)
 	return convert_to_output_str(input_idc, user_input)
 
