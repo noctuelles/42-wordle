@@ -57,10 +57,12 @@ def read_dict(filename):
 def generate_new_word(word_list):
 	os.system('clear')
 	mode= True
-	nbr_line = len(word_list)
+	nbr_line = len(word_list) - 1
 	random_index = random.randint(0, nbr_line)
 	print(f'Total words available :{nbr_line + 1}\n')
 	try:
+		print('Normal mode    : each day a new word to guess.')
+		print('Unlimited mode : every time you launch wordle you\'ve to guess another word.\n')
 		user_input = input('Do you want to play in unlimited mode? (y/n): ').strip().lower()
 		if (user_input == 'y'):
 			mode = False
@@ -189,19 +191,19 @@ def game_loop():
 		else:
 			error_msg = f'\x1b[31merror:\x1b[0m  \'{user_input}\' is not a valid word.'
 			continue
-	game_over()
+	game_over(word_to_guess, game_turns)
 
-def game_over():
+def game_over(word_to_guess, game_turns):
 	global output_buffer
 	global keyboard
 	global win
 	
-	if win == 1 or game_turns == 6:
+	if win == 1:
 		print('Congratulation, you won !\n')
 	elif game_turns == 6:
 		print(f'You loose ! The word was : \'{word_to_guess}\'.\n')
 	try:
-		user_input = input('Do you want to game_over (y/n): ').strip().lower()
+		user_input = input('Do you want to play again (y/n): ').strip().lower()
 		if (user_input == 'y'):
 			output_buffer = []
 			keyboard = std_keyboard
