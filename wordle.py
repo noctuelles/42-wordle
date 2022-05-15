@@ -57,18 +57,16 @@ def read_dict(filename):
 def generate_new_word(word_list):
 	os.system('clear')
 	mode= True
-	try:
-		user_input = input('Do you want to play in ulmite mode? (y/n): ').strip().lower()
-		if (user_input == 'y'):
-			mode = False
-	except KeyboardInterrupt:
-		print('\nGoodbye !')
-		sys.exit(1)
-	except EOFError as err:
-		print('\nGoodbye !')
-		sys.exit(1)
 	nbr_line = len(word_list)
 	random_index = random.randint(0, nbr_line)
+	print(f'Total words available :{nbr_line + 1}\n')
+	try:
+		user_input = input('Do you want to play in unlimited mode? (y/n): ').strip().lower()
+		if (user_input == 'y'):
+			mode = False
+	except (KeyboardInterrupt, EOFError) as e:
+		print('\nGoodbye !')
+		sys.exit(1)	
 	if mode is True:
 		random_index = datetime.date.today().year
 		random_index += datetime.date.today().month
@@ -170,18 +168,13 @@ def game_loop():
 		os.system('clear')
 		print(title)
 		print_board(output_buffer)
-		if error_msg:
-			print(error_msg)
-			error_msg = ""
 		print(keyboard)
-		if win == 1:
-			print('Congratulation, you won !')
-			break
-		elif game_turns == 6:
-			print(f'You loose ! The word was : \'{word_to_guess}\'.')
+		print(error_msg)
+		error_msg = ""
+		if win == 1 or game_turns == 6:
 			break
 		try:
-			user_input = input('Your word: ').strip().lower()
+			user_input = input('\nYour word: ').strip().lower()
 		except KeyboardInterrupt:
 			print('\nGoodbye !')
 			sys.exit(1)
@@ -196,15 +189,19 @@ def game_loop():
 		else:
 			error_msg = f'\x1b[31merror:\x1b[0m  \'{user_input}\' is not a valid word.'
 			continue
-	retry()
+	game_over()
 
-def retry():
+def game_over():
 	global output_buffer
 	global keyboard
 	global win
 	
+	if win == 1 or game_turns == 6:
+		print('Congratulation, you won !\n')
+	elif game_turns == 6:
+		print(f'You loose ! The word was : \'{word_to_guess}\'.\n')
 	try:
-		user_input = input('Do you want to retry (y/n): ').strip().lower()
+		user_input = input('Do you want to game_over (y/n): ').strip().lower()
 		if (user_input == 'y'):
 			output_buffer = []
 			keyboard = std_keyboard
@@ -212,12 +209,13 @@ def retry():
 			game_loop()
 		else:
 			print('\nGoodbye !')
-	except KeyboardInterrupt or EOFError as err:
+	except (KeyboardInterrupt, EOFError) as e:
 		print('\nGoodbye !')
 		sys.exit(1)
 
 def main():
 	global keyboard
+	os.system('clear')
 	if len(sys.argv) != 2:
 		print(f'\x1b[31musage:\x1b[0m: {sys.argv[0]} <path_to_dictionary>')
 		sys.exit(1)
