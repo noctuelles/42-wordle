@@ -38,7 +38,7 @@ def read_dict(filename):
 		line = line.strip()
 		if line:
 			if not line.isalpha() or len(line) != 5:
-				print(f'\x1b[31merror:\x1b[0m line {index}: not a valid word.')
+				print(f'\x1b[31merror:\x1b[0m line {index + 1}: not a valid word.')
 				sys.exit(1)
 			else:
 				if line not in word_list:
